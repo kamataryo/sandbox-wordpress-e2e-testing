@@ -1,3 +1,3 @@
 module.exports = {
-  launch: { headless: false }
+  launch: { headless: true }
 }
