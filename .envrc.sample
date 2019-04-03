@@ -1,0 +1,3 @@
+export WP_USERNAME=admin
+export WP_PASSWORD=admin
+export WP_BASE_URL='http://gijyutusyoten.vccw.test'

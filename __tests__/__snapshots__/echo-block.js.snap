@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Echo ブロックのテスト エコーブロックで作成される Post の内容がスナップショットと一致する 1`] = `
+"<!-- wp:register-echo-block/echo-block -->
+<div class=\\"wp-block-register-echo-block-echo-block\\"><span style=\\"font-size:1em\\" class=\\"value\\">Hello</span><span style=\\"font-size:.75em\\">Hello</span><span style=\\"font-size:.5em\\">Hello</span><span style=\\"font-size:.25em\\">Hello</span>...</div>
+<!-- /wp:register-echo-block/echo-block -->"
+`;

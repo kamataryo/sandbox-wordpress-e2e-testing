@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  test:
+    environment:
+      WP_USERNAME: admin
+      WP_PASSWORD: admin
+      WP_BASE_URL: 'http://127.0.0.1'
+
+    docker:
+      - image: circleci/php:7.2-cli-node
+      - image: circleci/mysql:5.7
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # prepare wordpress
+      - run: sudo apt-get install mysql-client subversion-tools
+      - run: sudo docker-php-ext-install mysqli
+      - run: bash bin/install-wp-tests.sh wordpress_test root '' '127.0.0.1' latest
+
+      # prepare chrome
+      - run:
+          name: install headless-chrome
+          command: |
+            sudo apt-get update && \
+            sudo apt-get install -yq --no-install-recommends \
+              libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 \
+              libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 \
+              libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 \
+              libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 \
+              libnss3 fonts-liberation libappindicator3-1 lsb-release xdg-utils && \
+            curl -O https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+            sudo dpkg -i google-chrome-stable_current_amd64.deb
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+      - run: npm test
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test
